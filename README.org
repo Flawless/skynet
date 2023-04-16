@@ -1,0 +1,11 @@
+* Config
+the system is configured throught env vars (using juxt/aero lib), take a look on available settings in
+resources/config.edn file.
+For development purpuses it's easy to use direnv (and its emacs integration) so just put your tg bot and openai tokens
+in .envrc file and allow them like so (in project root)
+#+BEGIN_SRC bash
+echo "export OPENAI_TOKEN=sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+export TG_BOT_TOKEN=0000000000:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" > .envrc
+
+direnv allow .
+#+END_SRC

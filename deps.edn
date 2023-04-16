@@ -1,0 +1,80 @@
+{:paths ["src/main" "resources"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}
+        ;; async engine
+
+        org.clojure/core.async {:mvn/version "1.6.673"}
+
+        ;; content negotiation
+        metosin/muuntaja {:mvn/version "0.6.8"}
+
+        ;; json codec
+        cheshire/cheshire {:mvn/version "5.11.0"}
+
+        ;; http client
+        clj-http/clj-http {:mvn/version "3.12.3"}
+
+        ;; component management
+        integrant/integrant {:mvn/version "0.8.0"}
+        integrant/repl      {:mvn/version "0.3.2"}
+
+        ;; websrv
+        ring/ring {:mvn/version "1.9.6"}
+        metosin/ring-http-response {:mvn/version "0.9.3"}
+        metosin/reitit-core {:mvn/version "0.6.0"}
+        metosin/reitit-malli {:mvn/version "0.6.0"}
+        metosin/reitit-middleware {:mvn/version "0.5.18"}
+        metosin/reitit-ring {:mvn/version "0.6.0"}
+
+        ;; hiccup lol
+        hiccup/hiccup {:mvn/version "1.0.5"}
+
+        ;; css like tailwind
+        com.thheller/shadow-css {:mvn/version "0.4.3"}
+
+        ;; bot lib
+        telegrambot-lib/telegrambot-lib {:mvn/version "2.6.0"}
+
+        ;; cli
+        org.clojure/tools.cli {:mvn/version "1.0.214"}
+
+        ;; ffmpeg
+        w33t/kawa {:mvn/version "0.1.2"}
+
+        ;; DB
+        com.github.seancorfield/next.jdbc {:mvn/version "1.3.874"}
+        org.postgresql/postgresql {:mvn/version "42.2.10"}
+
+        ;; Logging
+        org.clojure/tools.logging {:mvn/version "1.2.4"}
+        org.apache.logging.log4j/log4j-api {:mvn/version "2.13.0"}
+        org.apache.logging.log4j/log4j-core {:mvn/version "2.13.0"}
+        org.apache.logging.log4j/log4j-jcl {:mvn/version "2.13.0"}
+        com.fasterxml.jackson.dataformat/jackson-dataformat-yaml {:mvn/version "2.14.1"}
+        com.fasterxml.jackson.core/jackson-databind {:mvn/version "2.14.1"}
+
+        ;; nrepl
+        nrepl/nrepl {:mvn/version "1.1.0-alpha1"}
+
+        ;; a beautiful config reader
+        aero/aero {:mvn/version "1.1.6"}}
+ :aliases
+ {:env/dev {:extra-paths ["src/dev"]
+            :extra-deps {thheller/shadow-cljs {:mvn/version "2.22.9"}
+                         criterium/criterium {:mvn/version "0.4.6"}
+                         ;; using h2 instead of pg in dev env
+                         com.h2database/h2 {:mvn/version "1.4.200"}}
+            :jvm-opts ["-Dclojure.tools.logging.factory=clojure.tools.logging.impl/jul-factory"]}
+
+  :env/test {:extra-paths ["src/test"]
+             :extra-deps {com.h2database/h2 {:mvn/version "1.4.200"}}}
+
+  :build {:extra-paths ["src/build"]
+          :deps {io.github.clojure/tools.build {:mvn/version "0.9.4"}
+                 com.thheller/shadow-css {:mvn/version "0.4.3"}}
+          :ns-default build}
+
+  :test {:extra-paths ["src/test"]
+         :extra-deps {io.github.cognitect-labs/test-runner
+                      {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}
+         :main-opts ["-m" "cognitect.test-runner"]
+         :exec-fn cognitect.test-runner.api/test}} }

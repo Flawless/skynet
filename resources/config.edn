@@ -1,0 +1,30 @@
+{:jdbc/connection {:dbtype #profile {:prod "postgres"
+                                     :dev "h2"
+                                     :test "h2"}
+                   :host #or [#env DB_HOST
+                              "localhost"]
+                   :dbname #or [#env DB_NAME
+                                #profile {:prod "lasttry_prod"
+                                          :dev "lasttry_dev"
+                                          :test "lasttry_test"}]
+                   :user #or [#env DB_USER
+                              #env USER]
+                   :password #env DB_PASSWORD}
+
+ :translations/engine {:auth #env OPENAI_TOKEN}
+ :tg/bot {:token #env TG_BOT_TOKEN}
+
+ :bot/handler {:translations #ig/ref :translations/engine
+               :bot #ig/ref :tg/bot}
+ :bot/loop {:bot #ig/ref :tg/bot
+            :handler #ig/ref :bot/handler}
+
+ :http/handler {}
+ :jetty/server {:ring-handler (ig/ref :ring/handler)
+                :host "0.0.0.0"
+                :port #long #or [#env HTTP_PORT
+                                 8888]
+                :join? false}
+
+ :nrepl/server {:port #long #or [#env NREPL_PORT 7888]
+                :host "0.0.0.0"}}
