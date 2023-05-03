@@ -13,7 +13,7 @@
 
   ([bot offset]
    (let [resp (tbot/get-updates bot {:offset offset
-                                     :timeout 1000})]
+                                     :timeout 100})]
      (if (contains? resp :error)
        (log/error "tbot/get-updates error:" (:error resp))
        resp))))
