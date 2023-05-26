@@ -4,8 +4,11 @@
    [clojure.stacktrace]
    [clojure.string :as s]
    [kawa.core :as kawa]
+   [skynet.ocr :as ocr]
    [skynet.translate :as translate]
-   [telegrambot-lib.core :as tbot]))
+   [telegrambot-lib.core :as tbot])
+  (:import
+   (javax.imageio ImageIO)))
 
 (def admin? #{375758278})
 
@@ -36,6 +39,15 @@
          :text (s/join "\n\n" [transcription translation])})
       (finally (io/delete-file wav-file)))))
 
+(defn- handle-img [bot photo-coordinates opts l chat-id]
+  (let [img-maxres-id (:file_id (first (sort-by :file_size > photo-coordinates)))
+        url (get-url bot img-maxres-id)
+        bi (ImageIO/read (io/as-url url))
+        text (ocr/ocr bi)
+        respose (translate/translate text l opts)]
+    {:chat-id chat-id
+     :text respose}))
+
 (defn handler [bot translations]
   (fn
     [{{{chat-id :id} :chat
@@ -51,6 +63,8 @@
         (some? voice)
         (handle-voice bot voice translations l chat-id)
 
+        (some? photo)
+        (handle-img bot photo translations l chat-id)
 
         :else
         {:chat-id chat-id
