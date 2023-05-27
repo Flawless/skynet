@@ -1,0 +1,14 @@
+{:paths ["."]
+ :tasks {:requires ([babashka.fs :as fs])
+
+         backend (shell "clj -M:env/dev:env/cider:cider/nrepl")
+         clear (shell "rm -rf resources/public/js")
+         build (shell "clj -T:build uber")
+         docker (shell "docker build .")
+         all (do
+               (println "Cleaning target")
+               (shell "rm -rf resources/public/js")
+               (println "Building uber file")
+               (shell "clj -T:build uber")
+               (println "Creating docker image")
+               (shell "docker build ."))}}
