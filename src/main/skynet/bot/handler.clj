@@ -10,7 +10,7 @@
   (:import
    (javax.imageio ImageIO)))
 
-(def admin? #{375758278})
+(def admin? #{375758278 5371398693 5822055895})
 
 (defn file-url [path token]
   (format "https://api.telegram.org/file/bot%s/%s" token path))
