@@ -3,10 +3,11 @@
    [clojure.tools.build.api :as b]))
 
 (def lib 'flawless/sknt)
-(def version "0.0.0" #_(format "0.0.%s" (b/git-count-revs nil)))
+(def version (format "0.0.%s" (b/git-count-revs nil)))
 (def class-dir "target/classes")
 (def basis (b/create-basis {:project "deps.edn"}))
-(def uber-file (format "target/%s-%s-standalone.jar" (name lib) version))
+;; (def uber-file (format "target/%s-%s-standalone.jar" (name lib) version))
+(def uber-file "target/uber.jar")
 
 (defn clean [_]
   (b/delete {:path "target"}))
@@ -23,4 +24,5 @@
            :uber-file uber-file
            :basis basis
            :main 'skynet.main})
+  ;; (b/copy-file uber-file app-file)
   (println "Successfully built" uber-file))
