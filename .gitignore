@@ -76,3 +76,4 @@ flycheck_*.el
 performance.txt
 clj-kondo*.snap
 .planck_cache
+/.lsp/
