@@ -1,17 +1,5 @@
-{:jdbc/connection {:dbtype #profile {:prod "postgres"
-                                     :dev "h2"
-                                     :test "h2"}
-                   :host #or [#env DB_HOST
-                              "localhost"]
-                   :dbname #or [#env DB_NAME
-                                #profile {:prod "lasttry_prod"
-                                          :dev "lasttry_dev"
-                                          :test "lasttry_test"}]
-                   :user #or [#env DB_USER
-                              #env USER]
-                   :password #env DB_PASSWORD}
-
- :translations/engine {:auth #env OPENAI_TOKEN}
+{:translations/engine {:auth #env OPENAI_TOKEN
+                       :retries 5}
  :tg/bot {:token #env TG_BOT_TOKEN}
 
  :bot/handler {:translations #ig/ref :translations/engine

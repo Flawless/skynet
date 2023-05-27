@@ -13,7 +13,7 @@
 
   ([bot offset]
    (let [resp (tbot/get-updates bot {:offset offset
-                                     :timeout 1000})]
+                                     :timeout 100})]
      (if (contains? resp :error)
        (log/error "tbot/get-updates error:" (:error resp))
        resp))))
@@ -35,6 +35,7 @@
              messages (:result updates)]
          (doseq [msg messages]
            (-> msg :update_id (inc) (set-id!))
+           (log/info "!< " msg)
            (>! rx-q msg)))
        (if @exit?
          (do
@@ -43,8 +44,10 @@
          (recur)))
      (go-loop []
        (log/info "Procesing message.")
-       (let [{:keys [chat-id text]} (<! tx-q)]
-         (tbot/send-message bot chat-id text))
+       (let [{:keys [chat-id text] :as all} (<! tx-q)]
+         (log/info "!> " text " to " chat-id)
+         (log/info all)
+         (tbot/send-message bot all))
        (if @exit?
          (do
            (>! exit-chan-b :exit)
@@ -62,6 +65,7 @@
 
 (defmethod ig/init-key :tg/bot
   [_ {:keys [token]}]
+  (log/info "Creating bot")
   (tbot/create token))
 
 (defmethod ig/init-key :bot/loop
@@ -86,6 +90,4 @@
   [_ _])
 
 (defmethod ig/init-key :jetty/server
-  [_ _])
-(defmethod ig/init-key :jdbc/connection
   [_ _])
