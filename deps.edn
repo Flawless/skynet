@@ -41,7 +41,7 @@
         w33t/kawa {:mvn/version "0.1.2"}
 
         ;; ai api wrapper tools
-        io.github.flawless/ai {:git/tag "v0.0.3" :git/sha "9680f43"}
+        io.github.flawless/ai {:git/tag "v0.0.7" :git/sha "49abdae"}
 
         ;; DB
         com.github.seancorfield/next.jdbc {:mvn/version "1.3.874"}

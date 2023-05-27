@@ -1,5 +1,5 @@
 {:translations/engine {:auth #env OPENAI_TOKEN
-                       :retries 5}
+                       :retries #long #or [#env AI_RETRIES 5]}
  :tg/bot {:token #env TG_BOT_TOKEN}
 
  :bot/handler {:translations #ig/ref :translations/engine
