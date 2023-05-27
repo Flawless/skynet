@@ -87,9 +87,5 @@
 
 (defmethod ig/init-key :jetty/server
   [_ _])
-
-(defmethod ig/init-key :nrepl/server
-  [_ _])
-
 (defmethod ig/init-key :jdbc/connection
   [_ _])
