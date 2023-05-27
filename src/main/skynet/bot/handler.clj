@@ -3,7 +3,9 @@
    [clojure.java.io :as io]
    [clojure.stacktrace]
    [clojure.string :as s]
+   [clojure.tools.logging :as log]
    [kawa.core :as kawa]
+   [skynet.bot.commands :as commands]
    [skynet.ocr :as ocr]
    [skynet.translate :as translate]
    [telegrambot-lib.core :as tbot])
@@ -53,26 +55,29 @@
     [{{{chat-id :id} :chat
        text :text
        {l :language_code} :from
+       message-id :message_id
        voice :voice
        photo :photo} :message :as msg}]
-    (try
-      (cond
-        (some-> text (s/starts-with? "/start"))
-        {:chat-id chat-id :text (translate/introduce l translations)}
+    (tbot/send-chat-action bot chat-id :typing)
+    (->
+     (cond
+       (some-> text (s/starts-with? "/"))
+       (commands/handle msg translations)
 
-        (some? voice)
-        (handle-voice bot voice translations l chat-id)
+       (some? voice)
+       (handle-voice bot voice translations l chat-id)
 
-        (some? photo)
-        (handle-img bot photo translations l chat-id)
+       (some? photo)
+       {:text "OCR is not available"}
+       #_(handle-img bot photo translations l chat-id)
 
-        :else
-        {:chat-id chat-id
-         :text (translate/translate text l translations)})
-      (catch Exception e
-        (if (admin? chat-id)
-            {:chat-id chat-id
-             :text (with-out-str
-                     (clojure.stacktrace/print-stack-trace e))}
-            {:chat-id chat-id
-             :text "Something went wrong. Please, try again or contact my master @AlexanderUshanov"})))))
+       :else
+       {:text (translate/translate text l translations)})
+     (try (catch Throwable t
+            (log/error t)
+            (if (admin? chat-id)
+              {:text (with-out-str
+                       (clojure.stacktrace/print-stack-trace t))}
+              {:text "Something went wrong. Please, try again or contact my master @AlexanderUshanov"})))
+     (assoc :chat_id chat-id
+            :reply_to_message_id message-id))))
