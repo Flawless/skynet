@@ -55,7 +55,7 @@
     (if exit-message
       (exit (if ok? 0 1) exit-message)
       (let [{:keys [token ai-key profile]} options
-            config (some-> (sknt/config profile)
+            config (cond-> (sknt/config profile)
                            ai-key (assoc-in [:translation/engine :auth] ai-key)
                            token (assoc-in [:tg/bot :token] token))]
         (ig/init config)))))
